@@ -1,0 +1,101 @@
+#include <iostream>
+#include <cstring>
+#include "Exception.h"
+#include "DTString.h"
+
+using namespace std;
+using namespace MyLib;
+
+
+int sub_str_index(const char* s, const char* p)
+{
+    int ret = -1;
+    int slen = strlen(s);
+    int plen = strlen(p);
+    int len = slen - plen;
+
+    for(int i=0; (ret < 0) && (i <= len); i++)
+    {
+        bool equal = true;
+
+        for(int j=0; equal && (j < plen); j++)
+        {
+            equal = equal && (s[i + j] == p[j]);
+        }
+
+        ret = (equal ? i : -1);
+    }
+
+    return ret;
+}
+
+int *make_pmt(const char* p)
+{
+    int len = strlen(p);
+    int* ret = static_cast<int*>(malloc(sizeof(int) * len));
+
+    if(ret)
+    {
+        int ll = 0;
+
+        ret[0] = 0;
+
+        for(int i=1; i<len; i++)
+        {
+            while((ll > 0) && (p[ll] != p[i]))
+            {
+                ll = ret[ll - 1];
+            }
+
+            if(p[ll] == p[i])
+            {
+                ll++;
+            }
+
+            ret[i] = ll;
+        }
+    }
+
+    return ret;
+}
+
+int kmp(const char* s, const char* p)
+{
+    int ret = -1;
+    int slen = strlen(s);
+    int plen = strlen(p);
+    int* pmt = make_pmt(p);
+
+    if(pmt && (0 < plen) && (plen <= slen))
+    {
+        for(int i=0, j=0; i<slen; i++)
+        {
+            while((j > 0) && (s[i] != p[j]))
+            {
+                j = pmt[j - 1];
+            }
+
+            if(s[i] == p[j])
+            {
+                j++;
+            }
+
+            if(j == plen)
+            {
+                ret = i + 1 - plen;
+                break;
+            }
+        }
+    }
+
+    free(pmt);
+
+    return ret;
+}
+
+int main()
+{
+   
+
+    return 0;
+}

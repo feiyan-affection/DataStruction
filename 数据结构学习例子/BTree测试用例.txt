@@ -1,0 +1,164 @@
+#include <iostream>
+#include "BTree.h"
+#include "SharedPointer.h"
+
+using namespace std;
+using namespace MyLib;
+
+int main()
+{
+
+   BTree<int> bt;
+   BTreeNode<int>* n = NULL;
+
+   bt.insert(1, NULL);
+
+   n = bt.find(1);
+   bt.insert(2, n);
+   bt.insert(3, n);
+
+   n = bt.find(2);
+   bt.insert(4, n);
+   bt.insert(5, n);
+
+   n = bt.find(4);
+   bt.insert(8, n);
+   bt.insert(9, n);
+
+   n = bt.find(5);
+   bt.insert(10, n);
+
+   n = bt.find(3);
+   bt.insert(6, n);
+   bt.insert(7, n);
+
+   n = bt.find(6);
+   bt.insert(11, n);
+
+   int a[] = {8, 9, 10, 11, 7};
+//   SharedPointer<Tree<int>> sp =  bt.remove(3);
+
+    for(int i=0; i<5; i++)
+    {
+        TreeNode<int>* node = bt.find(a[i]);
+
+        while(node)
+        {
+            cout << node->value << ", ";
+            node = node->parent;
+        }
+
+        cout << endl;
+    }
+
+    cout << "ndoe number is: " << bt.count() << endl;
+    cout << "tree height is: " << bt.height() << endl;
+    cout << "tree degree is: " << bt.degree() << endl;
+
+    bt.clear();
+    cout << "clear begin:" << endl;
+
+    for(int i=0; i<5; i++)
+    {
+        TreeNode<int>* node = bt.find(a[i]);
+
+        while(node)
+        {
+            cout << node->value << ", ";
+            node = node->parent;
+        }
+
+        cout << endl;
+    }
+
+    cout << "clear end..." << endl;
+
+    for(bt.begin(); !bt.end(); bt.next())
+    {
+        cout << bt.current() << ", ";
+    }
+    cout << endl;
+	
+    // 递归的方式遍历二叉树
+//    SharedPointer<Array<int>> sp = NULL;
+
+//    sp = bt.traversal(PreOrder);
+//    for(int i=0; i<(*sp).length(); i++)
+//    {
+//        cout << (*sp)[i] << ", ";
+//    }
+//    cout << endl;
+
+// 克隆一棵二叉树
+    SharedPointer<BTree<int>> btClone = bt.clone();
+
+      cout << "clone:" << endl;
+    int a[] = {8, 9, 10, 11, 7};
+    for(int i=0; i<5; i++)
+    {
+        TreeNode<int>* node = btClone->find(a[i]);
+
+        while(node)
+        {
+            cout << node->value << ", ";
+            node = node->parent;
+        }
+        cout << endl;
+    }
+// 二叉树的比较
+    cout << "bt == *btClone: " << (bt == *btClone) << endl;
+
+    BTree<int> nbt;
+
+    nbt.insert(0, NULL);
+
+    n = nbt.find(0);
+    nbt.insert(6, n);
+    nbt.insert(2, n);
+
+    n = nbt.find(2);
+    nbt.insert(7, n);
+    nbt.insert(8, n);
+
+    cout << "add tree result:" << endl;
+    int b[] = {8, 9, 10, 13, 5};
+    SharedPointer<BTree<int>> r = bt.add(nbt);
+
+    for(int i=0; i<5; i++)
+    {
+        TreeNode<int>* node = r->find(b[i]);
+
+        while(node)
+        {
+            cout << node->value << ", ";
+            node = node->parent;
+        }
+        cout << endl;
+    }
+    cout << endl;
+
+    SharedPointer<Array<int>> tr = r->traversal(PreOrder);
+    for(int i=0; i<(*tr).length(); i++)
+    {
+        cout << (*tr)[i] << ", ";
+    }
+    cout << endl;
+
+    // 线索化二叉树
+    BTreeNode<int>* head = bt.thread(LevelOrder);
+
+    // 游标移动到双向链表的尾部
+    while(head->right)
+    {
+        head = head->right;
+    }
+
+    while(head)
+    {
+        cout << head->value << ", ";
+        head = head->left;
+    }
+
+
+    return 0;
+}

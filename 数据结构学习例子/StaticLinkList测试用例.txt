@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string>
+#include "SmartPointer.h"
+#include "Exception.h"
+#include "Object.h"
+#include "List.h"
+#include "SeqList.h"
+#include "StaticList.h"
+#include "DynamicList.h"
+#include "StaticArray.h"
+#include "DynamicArray.h"
+#include "LinkList.h"
+#include "StaticLinkList.h"
+
+using namespace std;
+using namespace MyLib;
+
+int main()
+{
+    StaticLinkList<int, 5> list;
+
+    for(int i=0; i<5; ++i)
+    {
+        list.insert(0, i);
+        list.set(0, i*i);
+    }
+
+    for(list.move(0); !list.end(); list.next())
+    {
+        cout << list.current() << endl;
+    }
+
+    try
+    {
+        list.insert(6);
+    }
+    catch(const Exception& e)
+    {
+        cout << e.location() << endl;
+        cout << e.message() << endl;
+    }
+
+    return 0;
+}

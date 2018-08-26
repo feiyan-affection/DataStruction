@@ -1,0 +1,70 @@
+#include <iostream>
+#include <string>
+#include "SmartPointer.h"
+#include "Exception.h"
+#include "Object.h"
+#include "List.h"
+#include "SeqList.h"
+#include "StaticList.h"
+#include "DynamicList.h"
+#include "StaticArray.h"
+#include "DynamicArray.h"
+#include "LinkList.h"
+#include "StaticLinkList.h"
+#include "SharedPointer.h"
+#include "CircleList.h"
+#include "DualLinkList.h"
+
+using namespace std;
+using namespace MyLib;
+
+
+int main()
+{
+    DualLinkList<int> dl;
+
+    for(int i=0; i<5; i++)
+    {
+        dl.insert(0, i);
+        dl.insert(0, 5);
+    }
+
+    for(int i=0; i<dl.length(); i++)
+    {
+        cout << dl.get(i) << endl;
+    }
+    cout << "another: " << endl;
+
+    for(dl.move(0); !dl.end(); dl.next())
+    {
+        cout << dl.current() << endl;
+    }
+
+    cout << "begin: " << endl;
+
+//    for(dl.move(dl.length() - 1); !dl.end(); dl.pre())
+//    {
+//        cout << dl.current() << endl;
+//    }
+
+    dl.move(dl.length() - 1);
+    while(!dl.end())
+    {
+        if(dl.current() == 5)
+        {
+            cout << dl.current() << endl;
+            dl.remove(dl.find(dl.current()));
+        }
+        else
+        {
+            dl.pre();
+        }
+    }
+    cout << "end!" << endl;
+
+    for(dl.move(0); !dl.end(); dl.next())
+    {
+        cout << dl.current() << endl;
+    }
+    return 0;
+}

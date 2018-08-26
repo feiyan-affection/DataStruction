@@ -1,0 +1,196 @@
+#include <iostream>
+#include <cstring>
+#include "Exception.h"
+#include "DTString.h"
+
+using namespace std;
+using namespace MyLib;
+
+unsigned int __strlen__(const char* str)
+{
+    return (str ? (*str ? (1 + __strlen__(str + 1)) : 0) : 0);
+}
+
+struct Node
+{
+    int value;
+    struct Node* next;
+};
+
+Node* create_list(int v[], int len)
+{
+    Node* ret = NULL;
+    Node* slider = NULL;
+
+    for(int i=0; i<len; i++)
+    {
+        Node* node = new Node();
+
+        node->value = v[i];
+        node->next = NULL;
+        if(slider == NULL)
+        {
+            ret = slider = node;
+        }
+        else
+        {
+            slider->next = node;
+            slider = slider->next;
+        }
+    }
+
+    return ret;
+}
+
+void destroy_list(Node* list)
+{
+    while(list)
+    {
+        Node* del = list;
+        list = list->next;
+
+        delete del;
+    }
+}
+
+void print_list(Node* list)
+{
+    while(list )
+    {
+        cout << list->value <<"->";
+
+        list = list->next;
+    }
+
+    cout << "NULL" << endl;
+}
+
+// 问题一： 递归反转一个单链表
+Node* reverse_list(Node* list)
+{
+    if((list == NULL) || (list->next == NULL))
+    {
+        return list;
+    }
+    else
+    {
+        Node* guard = list->next;
+        Node* ret = reverse_list(list->next);
+
+        guard->next = list;
+        list->next = NULL;
+
+        return ret;
+    }
+}
+
+// 问题二： 合并两个已经排序的单链表
+Node* merge(Node* list1, Node* list2)
+{
+    if(list1 == NULL)
+    {
+        return list2;
+    }
+    else if(list2 == NULL)
+    {
+        return list1;
+    }
+    else if(list1->value < list2->value)
+    {
+//        Node* temp = list1->next;
+//        Node* list = merge(temp, list2);
+
+//        list1->next = list;
+
+//        return list1;
+        return (list1->next = merge(list1->next, list2), list1);
+    }
+    else
+    {
+//        Node* temp = list2->next;
+//        Node* list = merge(list1, temp);
+
+//        list2->next = list;
+
+//        return list2;
+        return (list2->next = merge(list1, list2->next), list2);
+    }
+}
+
+// 问题三：汉诺塔问题
+void HanoiTower(int n, char a, char b, char c) // a ==> sour, b ==> middle, c ==> dest
+{
+    if(n == 1)
+    {
+        cout << a << "-->" << c << endl;
+    }
+    else
+    {
+        HanoiTower(n-1, a, c, b);
+        HanoiTower(1, a, b, c);
+        HanoiTower(n-1, b, a, c);
+    }
+}
+
+// 问题四： 全排列问题
+void permutation(char* s, char* e)
+{
+    if(*s == '\0')
+    {
+        cout << e << endl;
+    }
+    else
+    {
+        int len = strlen(s);
+
+        for(int i=0; i<len; i++)
+        {
+            if((i == 0) || (s[0] != s[i]))
+            {
+                swap(s[0], s[i]);
+                permutation(s+1, e);
+                swap(s[0], s[i]);
+            }
+        }
+    }
+}
+
+// 问题五： 反向打印一个单链表的值
+void r_print_even(Node* list)
+{
+    if(list)
+    {
+        r_print_even(list->next);
+
+        if((list->value % 2) == 0)
+        {
+            cout << list->value << endl;
+        }
+    }
+}
+
+int main()
+{
+    int a[] = {3, 2, 5, 8, 4, 7, 6, 9};
+    Node* head1 = create_list(a, 8);
+
+//    Node* head2 = create_list(a, 5);
+//    head2 = merge(head1, head2);
+//    print_list(head1);
+
+//    destroy_list(head2);
+
+//    HanoiTower(3, 'a', 'b', 'c');
+
+//    char s[] = "abc";
+//    permutation(s, s);
+
+
+    print_list(head1);
+    r_print_even(head1->next);
+
+
+    destroy_list(head1);
+
+    return 0;
+}

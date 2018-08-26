@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string>
+#include "SmartPointer.h"
+#include "Exception.h"
+#include "Object.h"
+#include "List.h"
+#include "SeqList.h"
+#include "StaticList.h"
+#include "DynamicList.h"
+#include "StaticArray.h"
+#include "DynamicArray.h"
+#include "LinkList.h"
+#include "StaticLinkList.h"
+#include "SharedPointer.h"
+#include "CircleList.h"
+#include "DualLinkList.h"
+#include "DualStaticLinkList.h"
+#include "DualCircleList.h"
+
+
+using namespace std;
+using namespace MyLib;
+
+
+int main()
+{
+   struct Node : public Object
+   {
+       list_head head;
+       int value;
+       int i;
+   };
+
+   Node node;
+   list_head* ld = &node.head;
+
+   Node* pn1 = reinterpret_cast<Node*>(ld);
+   Node* pn2 = list_entry(ld, Node, head);
+
+   cout << "&node = " << &node << endl;
+   cout << "pn1 = " << pn1 << endl;
+   cout << "pn2 = " << pn2 << endl;
+
+    return 0;
+}

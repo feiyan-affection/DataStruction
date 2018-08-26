@@ -1,0 +1,149 @@
+#include <iostream>
+#include "ListGraph.h"
+
+using namespace  std;
+using namespace MyLib;
+
+int serach_max_path(Graph<int, int>& g, int v, Array<int>& count, Array<int>& path, Array<bool>& mark)
+{
+    int ret = 0;
+    int k = -1;
+    SharedPointer< Array<int> > aj = g.getAdjacent(v);
+
+    for(int i=0; i<aj->length(); i++)
+    {
+        int num  = 0;
+
+        if(!mark[(*aj)[i]])
+        {
+            num = serach_max_path(g, (*aj)[i], count, path, mark);
+        }
+        else
+        {
+            num = count[(*aj)[i]];
+        }
+
+        if(ret < num)
+        {
+            ret = num;
+            k = (*aj)[i];
+        }
+    }
+
+    ret++;
+
+    count[v] = ret;
+    mark[v] = true;
+    path[v] = k;
+
+    return ret;
+}
+
+SharedPointer< Graph<int, int> > create_graph(int* a, int len)
+{
+    ListGraph<int, int>* ret = new ListGraph<int, int>(len);
+
+    for(int i=0; i<len; i++)
+    {
+        ret->setVertex(i, a[i]);
+    }
+
+    for(int i=0; i<len; i++)
+    {
+        for(int j=i+1; j<len; j++)
+        {
+            if(a[i] <= a[j])
+            {
+                ret->setEdge(i, j, 1);
+            }
+        }
+    }
+
+    return ret;
+}
+
+void init_array( Array<int>& count, Array<int>& path, Array<bool>& mark)
+{
+    for(int i=0; i<count.length(); i++)
+    {
+        count[i] = 0;
+    }
+
+    for(int i=0; i<path.length(); i++)
+    {
+        path[i] = -1;
+    }
+
+    for(int i=0; i<mark.length(); i++)
+    {
+        mark[i] = false;
+    }
+
+}
+
+void print_max_path(Graph<int, int>& g, Array<int>& count, Array<int>& path)
+{
+    int max = 0;
+
+    for(int i=0; i<count.length(); i++)
+    {
+        if(max < count[i])
+        {
+            max = count[i];
+        }
+    }
+
+    cout << "len: " << max << endl;
+
+    for(int i=0; i<count.length(); i++)
+    {
+        if(max == count[i])
+        {
+            cout << "Element:" << g.getVertex(i) << " ";
+
+            for(int j=path[i]; j!=-1; j=path[j])
+            {
+                cout << g.getVertex(j) << " ";
+            }
+
+            cout << endl;
+        }
+    }
+}
+
+void serach_max_path(Graph<int, int>& g, Array<int>& count, Array<int>& path, Array<bool>& mark)
+{
+    for(int i=0; i<g.vertexCount(); i++)
+    {
+        if(!mark[i])
+        {
+            serach_max_path(g, i, count, path, mark);
+        }
+    }
+}
+
+void solution(int* a, int len)
+{
+    DynamicArray<int> count(len);
+    DynamicArray<int> path(len);
+    DynamicArray<bool> mark(len);
+    SharedPointer< Graph<int, int> > g;
+
+    g = create_graph(a, len);
+
+    init_array(count, path, mark);
+
+    serach_max_path(*g, count, path, mark);
+
+    print_max_path(*g, count, path);
+}
+
+int main()
+{
+    int a[]=  {1, 2, 3, 4, 5};
+
+    solution(a, sizeof(a)/sizeof(*a));
+
+
+    return 0;
+}

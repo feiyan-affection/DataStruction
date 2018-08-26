@@ -1,0 +1,41 @@
+#include <iostream>
+#include <string>
+#include "SmartPointer.h"
+#include "Exception.h"
+#include "Object.h"
+#include "List.h"
+#include "SeqList.h"
+#include "StaticList.h"
+#include "DynamicList.h"
+#include "StaticArray.h"
+
+using namespace std;
+using namespace MyLib;
+
+int main()
+{
+    StaticArray<int, 5> sa;
+    for(int i=0; i<sa.length(); i++)
+    {
+        sa[i] = i * i;
+    }
+
+    for(int i=0; i<sa.length(); i++)
+    {
+        cout << sa[i] << ", ";
+    }
+    cout << endl << endl;
+
+    StaticArray<int, 5> ss;
+    ss = sa;
+
+    for(int i=0; i<ss.length(); i++)
+    {
+        cout << ss[i] << ", ";
+    }
+    cout << endl;
+
+    // ss[6] = 1000;       // 会报告出错异常
+
+    return 0;
+}
